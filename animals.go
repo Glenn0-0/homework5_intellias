@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 //base animal structure.
-//whether its a cat, cow or a dog, they will still have same properties such as consumption of food per kg of its weight, the weight and its name.
+//whether its a cat, cow or a dog, they will still have same properties such as consumption of food per kg of its weight, the weight, its name and type.
 type animal struct {
 	consumption int
 	weight      int
@@ -11,7 +11,7 @@ type animal struct {
 	animalType  string
 }
 
-//methods
+
 type foodAmountGetter interface {
 	getFoodAmount() int
 	getInfo() (string, error)
@@ -26,9 +26,9 @@ func (a animal) getFoodAmount() int {
 	return int(a.consumption * a.weight)
 }
 
-//prints out info for every animal in the farm.
+//returns info and possible errors for every animal in the farm.
 func (a animal) getInfo() (string, error) {
-	err := a.validateName()
+	err := a.validateName() //validation starting point.
 	if err != nil {
 		err = fmt.Errorf("for %s %s: validation failed: %w\n", a.animalType, a.name, err)
 	}
@@ -37,10 +37,10 @@ func (a animal) getInfo() (string, error) {
 }
 
 
-//ckeck if name corresponds to the animal type
+//ckeck if name corresponds to the animal type.
 func (a animal) validateName() (err error) {
 
-	//validate name accordance to type
+	//validate name accordance to type. Iterating through list of names and if matched, remembering the type of animal this name list was for.
 	var realType string
 
 	for _, name := range dogNames {
@@ -61,11 +61,11 @@ func (a animal) validateName() (err error) {
 		}
 	}
 
-	if realType != a.animalType {
+	if realType != a.animalType { //comparing given animal type with the remebered one, if differs - error occurs.
 		err = fmt.Errorf("mismatched name and type: %s has to be a %s: %s is a %s", a.name, realType, a.name, a.animalType)
 	}
 
-	//validate the weight of an animal
+	//validate the weight of an animal in case no prior errors occured.
 	if err == nil {
 		err = a.validateWeight()
 	}
@@ -73,10 +73,10 @@ func (a animal) validateName() (err error) {
 	return err
 }
 
-//check if this abimal has proper weight
+//check if this abimal has proper weight.
 func (a animal) validateWeight() (err error) {
 
-	switch a.animalType {
+	switch a.animalType { //checking if weight is inbetween min and max values
 	case dogType:
 
 		if dogWeightMin > a.weight {
@@ -103,17 +103,17 @@ func (a animal) validateWeight() (err error) {
 
 	}
 
-	if err == nil {
+	if err == nil { //if there are still no errors - check if an animal is edible.
 		err = a.isEdible()
 	}
 
 	return err
 }
 
-//check if this animal is edible
+//check if this animal is edible.
 func (a animal) isEdible() (err error) {
 	if a.animalType == dogType || a.animalType == catType {
-		err = fmt.Errorf("%[1]s is not edible: %[1]s is a %s", a.name, a.animalType)
+		err = fmt.Errorf("%[1]s is not edible: %[1]s is a %s", a.name, a.animalType) //an animal isn't edible if it's a dog or a cat.
 	}
 	return err
 }

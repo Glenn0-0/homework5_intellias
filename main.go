@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-//customizable constants for every animal.
+//customizable variables for every animal.
 var (
 	//dog
 	dogConsumption = 2
@@ -31,7 +31,7 @@ var (
 	cowType        = "Cow"
 )
 
-//gets random index to choose a name for an animal from slice
+//gets random index to choose a name for an animal from slice.
 func randNameIndex(numOfNames int) int {
 	return rand.Intn(numOfNames)
 }
@@ -97,12 +97,12 @@ func main() {
 	fmt.Printf("\nFarm info:\n\n")
 
 	for _, an := range farm {
-		info, err := an.getInfo()
+		info, err := an.getInfo() //gets info about every animal in the farm and possiable errors.
 		fmt.Print(info) //prints out info for every animal in the farm.
 		if err == nil {
 			totalFoodAmount += an.getFoodAmount() //adds required amount of food for a specified animal to total sum.
 		} else {
-			fmt.Println(err)
+			fmt.Println(err) //prints out the error and stops program execution.
 			os.Exit(0)
 		}          
 	}
