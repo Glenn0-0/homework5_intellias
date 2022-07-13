@@ -40,18 +40,16 @@ func randNameIndex(numOfNames int) int {
 func createRandFarm(numOfAnimals int) (animals []foodAmountGetter) {
 
 	var entity foodAmountGetter
-	min := 1 //indexes to get a random animal - see code below.
-	max := 3
 	rand.Seed(time.Now().UnixNano())
 
 	for i := 0; i < numOfAnimals; i++ {
 
-		randAnimal := rand.Intn(max-min+1) + min //1 = dog; 2 = cat; 3 = cow.
+		randAnimal := rand.Intn(3) //0 = dog; 1 = cat; 2= cow.
 
 		//based on the number gotten, adding to the farm an animal with random weight.
 		switch randAnimal {
 
-		case 1:
+		case 0:
 			randWeight := rand.Intn(dogWeightMax-dogWeightMin+1) + dogWeightMin //gets random weight for an animal in range of max and min values.
 
 			entity = animal{ //adds an animal according to base animal structure.
@@ -61,7 +59,7 @@ func createRandFarm(numOfAnimals int) (animals []foodAmountGetter) {
 				animalType: dogType,
 			}
 
-		case 2:
+		case 1:
 			randWeight := rand.Intn(catWeightMax-catWeightMin+1) + catWeightMin
 
 			entity = animal{
@@ -71,7 +69,7 @@ func createRandFarm(numOfAnimals int) (animals []foodAmountGetter) {
 				animalType:  catType,
 			}
 
-		case 3:
+		case 2:
 			randWeight := rand.Intn(cowWeightMax-cowWeightMin+1) + cowWeightMin
 
 			entity = animal{
@@ -99,12 +97,11 @@ func main() {
 	for _, an := range farm {
 		info, err := an.getInfo() //gets info about every animal in the farm and possiable errors.
 		fmt.Print(info) //prints out info for every animal in the farm.
-		if err == nil {
-			totalFoodAmount += an.getFoodAmount() //adds required amount of food for a specified animal to total sum.
-		} else {
+		if err != nil {
 			fmt.Println(err) //prints out the error and stops program execution.
 			os.Exit(0)
-		}          
+		}
+		totalFoodAmount += an.getFoodAmount() //adds required amount of food for a specified animal to total sum.         
 	}
 
 	fmt.Printf("\nIn total, this farm needs %vkg of food\n\n", totalFoodAmount) //prints out total sum of food needed to feed this farm.
