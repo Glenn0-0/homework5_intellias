@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-//customizable variables for every animal.
+//variables for every animal.
 var (
 	//dog
 	dogConsumption = 2
@@ -95,15 +95,24 @@ func main() {
 	fmt.Printf("\nFarm info:\n\n")
 
 	for _, an := range farm {
-		info, err := an.getInfo() //gets info about every animal in the farm and possiable errors.
+		info, err := an.getInfo() //gets info about every animal in the farm and possible errors.
 		fmt.Print(info) //prints out info for every animal in the farm.
+
 		if err != nil {
-			fmt.Println(err) //prints out the error and stops program execution.
+			fmt.Println(err, "\nStopping program execution...") //prints out the error if mismatched animal type or weight and stops program execution.
 			os.Exit(0)
+
+		} else if animalType, animalName, edible := an.isEdible(); edible != nil {
+			fmt.Println(fmt.Errorf("for %s %s: validation failed: %w", animalType, animalName, edible)) //if given animal is not edible, then prints out the error, ignores the animal (doesn't add its needed food amount to the total) and doesn't stop program execution.
+
+		} else {
+			//fmt.Print(info) //prints out info for every animal in the farm.
+			totalFoodAmount += an.getFoodAmount() //adds required amount of food for a specified animal to total sum.
 		}
-		totalFoodAmount += an.getFoodAmount() //adds required amount of food for a specified animal to total sum.         
+
+		fmt.Println() //just ln in the output for better readability.
+		         
 	}
 
-	fmt.Printf("\nIn total, this farm needs %vkg of food\n\n", totalFoodAmount) //prints out total sum of food needed to feed this farm.
-
+	fmt.Printf("In total, this farm needs %vkg of food\n\n", totalFoodAmount) //prints out total sum of food needed to feed this farm.
 }
